@@ -1,10 +1,10 @@
 # Catalysts
 
-[![Build Status](https://api.travis-ci.org/InTheNow/catalysts.png)](https://travis-ci.org/InTheNow/catalysts)
+[![Build Status](https://api.travis-ci.org/typelevel/catalysts.png)](https://travis-ci.org/typelevel/catalysts)
 [![Join the chat at
-https://gitter.im/InTheNow/catalysts](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/InTheNow/catalysts?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Stories in Ready](https://badge.waffle.io/InTheNow/catalysts.png?label=ready&title=Ready)](https://waffle.io/InTheNow/catalysts)
-[![codecov.io](http://codecov.io/github/InTheNow/catalysts/coverage.svg?branch=master)](http://codecov.io/github/InTheNow/catalysts?branch=master)
+https://gitter.im/typelevel/sbt-catalysts](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/typelevel/sbt-catalysts?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Stories in Ready](https://badge.waffle.io/typelevel/sbt-catalysts.png?label=ready&title=Ready)](https://waffle.io/typelevel/sbt-catalysts)
+[![codecov.io](http://codecov.io/github/typelevel/catalysts/coverage.svg?branch=master)](http://codecov.io/github/typelevel/catalysts?branch=master)
 
 Catalysts is an intentionally small library of small moduless to help build and test platform independent Scala projects with SBT.
 
@@ -14,7 +14,7 @@ The current maintainers (people who can merge pull requests) are:
 
  * [adelbertc](https://github.com/adelbertc) Adelbert Chang
  * [ochrons](https://github.com/ochrons) Otto Chrons
- * [InTheNow](https://github.com/InTheNow) Alistair Johnson
+ * [BennyHill](https://github.com/BennyHill) Alistair Johnson
  * [non](https://github.com/non) Erik Osheim
  * [milessabin](https://github.com/milessabin) Miles Sabin
  * [dwijnand](https://github.com/dwijnand) Dale Wijnand
@@ -27,9 +27,9 @@ relax this to a single sign-off.
 ### Contributing
 
 Discussion around Catalysts is currently happening in the
-[Gitter channel](https://gitter.im/InTheNow/catalysts) as well as on Github
+[Gitter channel](https://gitter.im/typelevel/sbt-catalysts) as well as on Github
 issue and PR pages. You can get an overview of who is working on what
-via [Waffle.io](https://waffle.io/InTheNow/catalysts).
+via [Waffle.io](https://waffle.io/typelevel/sbt-catalysts).
 
 Feel free to open an issue if you notice a bug, have an idea for a
 feature, or have a question about the code. Pull requests are also
