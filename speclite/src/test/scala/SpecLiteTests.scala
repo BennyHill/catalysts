@@ -3,7 +3,7 @@ package speclite
 
 import catalysts.specbase.SpecBaseTests
 import catalysts.speclite.Pretty.Params
-import catalysts.speclite.Prop.{Arg, Exception}
+import catalysts.speclite.Prop.Arg
 //import catalysts.speclite.SpecLiteTest
 import catalysts.testkit._
 
@@ -167,22 +167,16 @@ class SpecliteCoreTests extends Suite {
 
     trait MyParameters { //extends SpecLiteTest.Parameters{
 
+      val myFlag: Boolean
       val myString: String
 
-      def withMyString(myString: String): MyParameters = myCp(
-        myString = myString
-      )
-      val myFlag: Boolean
+      def withMyString(s: String): MyParameters = new myCp(myFlag,s)
 
-      def withMyFlag(myFlag: Boolean): MyParameters = myCp(
-        myFlag = myFlag
-      )
-      case class myCp(
-                       myFlag: Boolean = myFlag,
-                       myString: String = myString
-                       ) extends MyParameters
+      def withMyFlag(flag: Boolean): MyParameters = new myCp(flag, myString)
 
+      class myCp(val myFlag: Boolean, val myString: String) extends MyParameters
     }
+
     object MyDefault extends MyParameters {
       val myString: String = "S"
       val myFlag: Boolean = false

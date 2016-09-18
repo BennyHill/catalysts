@@ -40,7 +40,6 @@ trait FSuiteMatchers { self : TestKit =>
     macro FSuiteMatchersMacros.assertTypedSame[A]
 }
 
-import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import macrocompat.bundle
 

@@ -13,7 +13,7 @@ import Prop.{Exception, Result}
 import Gen.Parameters
 
 @JSExportDescendentClasses
-class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) extends Prop{
+class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) { //extends Prop{
   def apply(prms: Parameters): Result = {
     try ev(a).apply(prms) catch {
       case e: Throwable => Result(status = Exception(e))

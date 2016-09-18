@@ -1,5 +1,7 @@
 import org.typelevel.{Dependencies => typelevel}
 import org.typelevel.catalysts.{Dependencies => catalysts}
+import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
+
 /**
  * These aliases serialise the build for the benefit of Travis-CI, also useful for pre-PR testing.
  * If new projects are added to the build, these must be updated.
@@ -16,8 +18,8 @@ addCommandAlias("gitSnapshots", ";set version in ThisBuild := git.gitDescribedVe
 /**
  * Project settings
  */
-val gh = GitHubSettings(org = "InTheNow", proj = "catalysts", publishOrg = "org.typelevel", license = apache)
-val devs = Seq(Dev("Alistair Johnson", "inthenow"))
+val gh = GitHubSettings(org = "typelevel", proj = "catalysts", publishOrg = "org.typelevel", license = apache)
+val devs = Seq(Dev("Alistair Johnson", "BennyHill"))
 
 val vers = typelevel.versions ++ catalysts.versions
 val libs = typelevel.libraries ++ catalysts.libraries
@@ -68,6 +70,7 @@ lazy val macrosJVM = macrosM.jvm
 lazy val macrosJS  = macrosM.js
 lazy val macrosM   = module("macros", CrossType.Pure)
   .settings(typelevel.macroCompatSettings(vAll):_*)
+  .settings(fix2_12:_*)
 
 /**
  * Platform - cross project that provides cross platform support
@@ -110,6 +113,8 @@ lazy val lawkitM   = module("lawkit", CrossType.Pure)
   .dependsOn(macrosM, testkitM)
   .settings(typelevel.macroCompatSettings(vAll):_*)
   .settings(disciplineDependencies:_*)
+  .configure(disableScoverage210Js)
+  .settings(fix2_12:_*)
 
 /**
  * SpecBase - cross project that ...
@@ -121,7 +126,7 @@ lazy val specbaseM   = module("specbase", CrossType.Pure)
   .dependsOn(testkitM)
 
 /**
- * Testkit - cross project that defines test utilities that can be re-used in other libraries, as well as 
+ * Testkit - cross project that defines test utilities that can be re-used in other libraries, as well as
  *         all the tests for this build.
  */
 lazy val testkit    = prj(testkitM)
@@ -130,6 +135,8 @@ lazy val testkitJS  = testkitM.js
 lazy val testkitM   = module("testkit", CrossType.Pure)
   .dependsOn(macrosM, platformM)
   .settings(typelevel.macroCompatSettings(vAll):_*)
+  .configure(disableScoverage210Js)
+  .settings(fix2_12:_*)
 
 /**
  * Speclite - cross project that implements a basic test framework, with minimal external dependencies.
@@ -141,11 +148,11 @@ lazy val specliteM   =  module("speclite", CrossType.Pure)
   .dependsOn(platformM, testkitM % "compile; test -> test", specbaseM % "compile; test -> test")
   .settings(testFrameworks := Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")))
   .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
-  .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion) // % "provided", 
+  .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion)
   .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)
 
 /*
- * Tests - cross project that defines test utilities that can be re-used in other libraries, as well as 
+ * Tests - cross project that defines test utilities that can be re-used in other libraries, as well as
  *         all the tests for this build.
  */
 lazy val tests    = prj(testsM)
@@ -159,20 +166,22 @@ lazy val testsM   = module("tests", CrossType.Pure)
   .settings(testFrameworks ++= Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")))
 
 /**
- * Docs - Generates and publishes the scaladoc API documents and the project web site 
+ * Docs - Generates and publishes the scaladoc API documents and the project web site
  */
-lazy val docs = project.configure(mkDocConfig(gh, rootSettings, commonJvmSettings,
+lazy val docs = project
+  .configure(mkDocConfig(gh, rootSettings, commonJvmSettings,
     platformJVM, macrosJVM, scalatestJVM, specs2, testkitJVM ))
 
 /**
  * Settings
  */
-lazy val buildSettings = sharedBuildSettings(gh, vAll)
+lazy val buildSettings = localSharedBuildSettings(gh, vAll)
 
 lazy val commonSettings = sharedCommonSettings ++ Seq(
   scalacOptions ++= scalacAllOptions,
+  incOptions := incOptions.value.withLogRecompileOnMacro(false),
   parallelExecution in Test := false
-) ++ warnUnusedImport ++ unidocCommonSettings
+) ++ warnUnusedImport ++ unidocCommonSettings ++ update2_12
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Global := FastOptStage
@@ -184,7 +193,68 @@ lazy val disciplineDependencies = Seq(addLibs(vAll, "discipline", "scalacheck" )
 
 lazy val publishSettings = sharedPublishSettings(gh, devs) ++ credentialSettings ++ sharedReleaseProcess
 
-import scoverage.ScoverageSbtPlugin._
 lazy val scoverageSettings = sharedScoverageSettings(60) ++ Seq(
-  ScoverageKeys.coverageExcludedPackages := "catalysts\\.Platform"
+  coverageExcludedPackages := "catalysts\\.Platform"
 )
+
+ /** Common coverage settings, with minimum coverage defaulting to 80.*/
+  def sharedScoverageSettings(min: Int = 80) = Seq(
+    coverageMinimum := min,
+    coverageFailOnMinimum := false
+   //   ,coverageHighlighting := scalaBinaryVersion.value != "2.10"
+  )
+
+def localSharedBuildSettings(gh: GitHubSettings, v: Versions) = Seq(
+    organization := gh.publishOrg,
+    scalaVersion := v.vers("scalac"),
+    crossScalaVersions := Seq(v.vers("scalac_2.10"), "2.12.0-RC1", scalaVersion.value)
+  )
+
+val cmdlineProfile = sys.props.getOrElse("sbt.profile", default = "")
+
+
+def profile(crossProject: CrossProject) = cmdlineProfile match {
+  case "2.12.x" =>
+    crossProject
+      .jsConfigure(_.disablePlugins(scoverage.ScoverageSbtPlugin))
+      .jvmConfigure(_.disablePlugins(scoverage.ScoverageSbtPlugin))
+
+  case _ => crossProject
+}
+
+def profile: Project ⇒ Project = p => cmdlineProfile match {
+  case "2.12.x" => p.disablePlugins(scoverage.ScoverageSbtPlugin)
+  case _ => p
+}
+
+def disableScoverage210Js(crossProject: CrossProject) =
+  crossProject
+  .jsSettings(coverageEnabled := {
+                CrossVersion.partialVersion(scalaVersion.value) match {
+                  case Some((2, 10)) => false
+                  case _ => coverageEnabled.value
+                }
+              }
+  )
+
+lazy val update2_12 = Seq(
+    scalacOptions -= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 12)) =>
+          "-Yinline-warnings"
+        case _ =>
+          ""
+      }
+    }
+  )
+
+lazy val fix2_12 = Seq(
+    scalacOptions -= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 12)) =>
+          "-Xfatal-warnings"
+        case _ =>
+          ""
+      }
+    }
+  )

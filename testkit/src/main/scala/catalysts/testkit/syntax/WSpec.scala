@@ -28,7 +28,6 @@ trait WSpecMatchers { self: TestKit =>
   }
 }
 
-import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import macrocompat.bundle
 

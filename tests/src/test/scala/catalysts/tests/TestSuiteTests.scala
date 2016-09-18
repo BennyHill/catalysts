@@ -18,10 +18,9 @@ class StdTestTests extends TestSuite with scalatest.DisableTripleEquals {
   test("StdTest names") {
     assert(projectKey == "catalysts")
   }
- 
+
   test("StdTest arbitaryTry") {
     import org.scalacheck.Arbitrary
-    import org.scalacheck.Arbitrary.arbitrary
     import scala.util.Try
 
     val ti = arbitraryTry(Arbitrary.arbInt)

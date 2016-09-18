@@ -6,6 +6,9 @@ scala:
 - 2.10.6
 - 2.11.7
 script:
+- scripts/publishLocalTut.sh
+- scripts/publishLocalSbtScoverage.sh
+- scripts/publishLocalScoverage.sh
 - scripts/travis-publish.sh
 cache:
   directories:
