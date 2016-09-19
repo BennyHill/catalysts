@@ -8,6 +8,14 @@ https://gitter.im/typelevel/sbt-catalysts](https://badges.gitter.im/Join%20Chat.
 
 Catalysts is an intentionally small library of small moduless to help build and test platform independent Scala projects with SBT.
 
+This interim version adds 2.12 support. It locally builds scoverage libraries, so to build his PR locally:
+
+```bash
+scripts/publishLocalScoverage.sh
+scripts/publishLocalSbtScoverage.sh
+sbt +clean coverageOn +test +clean coverageOff +test
+```
+
 ### Maintainers
 
 The current maintainers (people who can merge pull requests) are:
