@@ -70,6 +70,7 @@ lazy val macrosJVM = macrosM.jvm
 lazy val macrosJS  = macrosM.js
 lazy val macrosM   = module("macros", CrossType.Pure)
   .settings(typelevel.macroCompatSettings(vAll):_*)
+  .configure(disableScoverage210Js)
   .settings(fix2_12:_*)
 
 /**
@@ -150,6 +151,7 @@ lazy val specliteM   =  module("speclite", CrossType.Pure)
   .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
   .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion)
   .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)
+  .configure(disableScoverage210Jvm)
 
 /*
  * Tests - cross project that defines test utilities that can be re-used in other libraries, as well as
@@ -230,6 +232,16 @@ def profile: Project ⇒ Project = p => cmdlineProfile match {
 def disableScoverage210Js(crossProject: CrossProject) =
   crossProject
   .jsSettings(coverageEnabled := {
+                CrossVersion.partialVersion(scalaVersion.value) match {
+                  case Some((2, 10)) => false
+                  case _ => coverageEnabled.value
+                }
+              }
+  )
+
+def disableScoverage210Jvm(crossProject: CrossProject) =
+  crossProject
+  .jvmSettings(coverageEnabled := {
                 CrossVersion.partialVersion(scalaVersion.value) match {
                   case Some((2, 10)) => false
                   case _ => coverageEnabled.value
