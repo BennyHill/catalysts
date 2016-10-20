@@ -70,7 +70,7 @@ lazy val macrosJVM = macrosM.jvm
 lazy val macrosJS  = macrosM.js
 lazy val macrosM   = module("macros", CrossType.Pure)
   .settings(typelevel.macroCompatSettings(vAll):_*)
-  .configure(disableScoverage210Js)
+  .configureCross(disableScoverage210Js)
   .settings(fix2_12:_*)
 
 /**
@@ -114,7 +114,7 @@ lazy val lawkitM   = module("lawkit", CrossType.Pure)
   .dependsOn(macrosM, testkitM)
   .settings(typelevel.macroCompatSettings(vAll):_*)
   .settings(disciplineDependencies:_*)
-  .configure(disableScoverage210Js)
+  .configureCross(disableScoverage210Js)
   .settings(fix2_12:_*)
 
 /**
@@ -136,7 +136,7 @@ lazy val testkitJS  = testkitM.js
 lazy val testkitM   = module("testkit", CrossType.Pure)
   .dependsOn(macrosM, platformM)
   .settings(typelevel.macroCompatSettings(vAll):_*)
-  .configure(disableScoverage210Js)
+  .configureCross(disableScoverage210Js)
   .settings(fix2_12:_*)
 
 /**
@@ -151,7 +151,7 @@ lazy val specliteM   =  module("speclite", CrossType.Pure)
   .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
   .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion)
   .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)
-  .configure(disableScoverage210Jvm)
+  .configureCross(disableScoverage210Jvm)
 
 /*
  * Tests - cross project that defines test utilities that can be re-used in other libraries, as well as
@@ -209,7 +209,7 @@ lazy val scoverageSettings = sharedScoverageSettings(60) ++ Seq(
 def localSharedBuildSettings(gh: GitHubSettings, v: Versions) = Seq(
     organization := gh.publishOrg,
     scalaVersion := v.vers("scalac"),
-    crossScalaVersions := Seq(v.vers("scalac_2.10"), "2.12.0-RC1", scalaVersion.value)
+    crossScalaVersions := Seq(v.vers("scalac_2.10"), "2.12.0-RC2", scalaVersion.value)
   )
 
 val cmdlineProfile = sys.props.getOrElse("sbt.profile", default = "")
