@@ -253,7 +253,7 @@ def disableScoverage210Jvm(crossProject: CrossProject) =
 lazy val update2_12 = Seq(
     scalacOptions -= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 12)) =>
+        case Some((2, n)) if n >= 12 =>
           "-Yinline-warnings"
         case _ =>
           ""
@@ -264,7 +264,7 @@ lazy val update2_12 = Seq(
 lazy val fix2_12 = Seq(
     scalacOptions -= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 12)) =>
+        case Some((2, n)) if n >= 12 =>
           "-Xfatal-warnings"
         case _ =>
           ""
