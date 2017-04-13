@@ -6,7 +6,7 @@ https://gitter.im/typelevel/sbt-catalysts](https://badges.gitter.im/Join%20Chat.
 [![Stories in Ready](https://badge.waffle.io/typelevel/sbt-catalysts.png?label=ready&title=Ready)](https://waffle.io/typelevel/sbt-catalysts)
 [![codecov.io](http://codecov.io/github/typelevel/catalysts/coverage.svg?branch=master)](http://codecov.io/github/typelevel/catalysts?branch=master)
 
-Catalysts is an intentionally small library of small moduless to help build and test platform independent Scala projects with SBT.
+Catalysts is an intentionally small library of small modules to help build and test platform independent Scala projects with SBT.
 
 ### Maintainers
 
