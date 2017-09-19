@@ -2,6 +2,7 @@
 package catalysts
 package speclite
 
+//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class Properties(val name: String) extends Prop {
 
   private val props = new scala.collection.mutable.ListBuffer[(String,Prop)]
@@ -31,8 +32,7 @@ class PropFromFun(f: Gen.Parameters => Prop.Result) extends Prop {
   def apply(prms: Gen.Parameters) = f(prms)
 }
 
-@scala.scalajs.js.annotation.JSExportDescendentClasses
-@scala.scalajs.js.annotation.JSExportDescendentObjects
+//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 trait Prop {
 
   import Prop.{Result}//, secure}

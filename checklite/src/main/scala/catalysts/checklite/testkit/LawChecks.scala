@@ -5,6 +5,7 @@ package testkit
 import catalysts.lawkit.{LawChecks => BaseLawChecks}
 import org.typelevel.discipline.Laws
 
+//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 trait LawChecks extends BaseLawChecks   {
   self: CheckLite with TestSpec with TestKit =>
 

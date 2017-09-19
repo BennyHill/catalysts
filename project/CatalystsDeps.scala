@@ -11,10 +11,10 @@ object Dependencies {
   // Package -> version
   val versions = Map[String, String](
    // "macro-compat"   -> "1.0.44"
-    "discipline"     -> "0.7.2",
-    "scalacheck"     -> "1.13.4",
-    "scalatest"      -> "3.0.0",
-    "specs2"         -> "3.8.6"
+  // "discipline"     -> "0.8",
+  // "scalacheck"     -> "1.13.5",
+  // "scalatest"      -> "3.0.3",
+  // "specs2"         -> "3.9.2"
   )
 
   // library definitions and links to their versions

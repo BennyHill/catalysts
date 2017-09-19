@@ -58,9 +58,10 @@ lazy val checkliteM   = module("checklite", CrossType.Pure)
   .dependsOn(testkitM % "compile; test -> test", lawkitM % "compile; test -> test", specbaseM % "compile; test -> test")
   .settings(disciplineDependencies:_*)
   .settings(addLibs(vAll, "scalacheck"):_*)
-  .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
+  .settings(testFrameworks := Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")))
+ // .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
   .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion) // % "provided",
-  .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)
+ // .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)
 
 /**
  * Macros - cross project that defines macros
@@ -92,6 +93,7 @@ lazy val scalatestM   = module("scalatest", CrossType.Pure)
   .dependsOn(testkitM % "compile; test -> test", lawkitM % "compile; test -> test")
   .settings(disciplineDependencies:_*)
   .settings(addLibs(vAll, "scalatest"):_*)
+  .settings(scalacOptions -= "-Xfatal-warnings")
 
 /**
  * Specs2 - JVM project that defines test utilities for specs2
@@ -210,7 +212,7 @@ lazy val scoverageSettings = sharedScoverageSettings(60) ++ Seq(
 def localSharedBuildSettings(gh: GitHubSettings, v: Versions) = Seq(
     organization := gh.publishOrg,
     scalaVersion := v.vers("scalac"),
-    crossScalaVersions := Seq(v.vers("scalac_2.10"), "2.12.0", scalaVersion.value)
+    crossScalaVersions := Seq(v.vers("scalac_2.10"), v.vers("scalac_2.11") , v.vers("scalac_2.12") , v.vers("scalac_2.13"))
   )
 
 val cmdlineProfile = sys.props.getOrElse("sbt.profile", default = "")

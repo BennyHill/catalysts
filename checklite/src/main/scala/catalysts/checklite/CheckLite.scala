@@ -8,11 +8,11 @@ import org.scalacheck.{Gen, Prop, Properties}
 
 import catalysts.macros.ClassInfo._
 import catalysts.specbase.SpecBase
-import scala.scalajs.js.annotation.JSExportDescendentClasses
+
 import Prop.{Exception, Result}
 import Gen.Parameters
 
-@JSExportDescendentClasses
+//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) { //extends Prop{
   def apply(prms: Parameters): Result = {
     try ev(a).apply(prms) catch {
@@ -20,12 +20,14 @@ class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) { //extends Prop{
     }
   }
 }
-@JSExportDescendentClasses
+
+//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class PropertyOpsWithProp(propName: String, prop: Prop, name:String, props: Properties) extends Properties(props.name) {
   for {(name, p) <- props.properties} property(name) = p
   property(propName) = prop
 }
 
+@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 abstract class CheckLite extends Properties("") with SpecBase[Prop, Properties]{
 
   override val name:String =  className(this)

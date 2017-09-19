@@ -3,12 +3,11 @@ package speclite
 
 import catalysts.macros.ClassInfo._
 import catalysts.specbase.SpecBase
-import scala.scalajs.js.annotation.JSExportDescendentClasses
 
 import Prop.{Exception, Result}
 import Gen.Parameters
 
-@JSExportDescendentClasses
+//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) extends Prop{
   def apply(prms: Parameters): Result = {
     try ev(a).apply(prms) catch {
@@ -17,7 +16,7 @@ class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) extends Prop{
   }
 }
 
-@JSExportDescendentClasses
+@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 abstract class SpecLite extends Properties("") with SpecBase[Prop, Properties]{
 
   override val name:String =  className(this)

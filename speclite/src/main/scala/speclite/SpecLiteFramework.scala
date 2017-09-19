@@ -47,7 +47,7 @@ private abstract class SpecLiteRunner(
     val props: Map[String,Prop] = {
       val fp = taskDef.fingerprint.asInstanceOf[SubclassFingerprint]
       val obj = if (fp.isModule) loadModule(taskDef.fullyQualifiedName,loader)
-                else newInstance(taskDef.fullyQualifiedName, loader)(Seq[AnyRef]())
+                else newInstance(taskDef.fullyQualifiedName, loader, Seq())(Seq[AnyRef]())
       obj match {
         case props: Properties => Map(props.properties: _*)
         case prop: Prop => Map("" -> prop)
