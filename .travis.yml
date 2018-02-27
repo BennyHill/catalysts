@@ -17,8 +17,8 @@ jdk:
   - oraclejdk8
 
 script:
-  - scripts/travis-publish.sh
   - scripts/publishLocalSbtCatalysts.sh
+  - scripts/travis-publish.sh
 
 cache:
   directories:
