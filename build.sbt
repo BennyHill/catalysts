@@ -19,13 +19,17 @@ addCommandAlias("gitSnapshots", ";set version in ThisBuild := git.gitDescribedVe
  * Project settings
  */
 val gh = GitHubSettings(org = "typelevel", proj = "catalysts", publishOrg = "org.typelevel", license = apache)
-val devs = Seq(Dev("Alistair Johnson", "BennyHill"))
+val devs = Seq(Developer("Alistair Johnson", "BennyHill", "", new java.net.URL("https://en.wikipedia.org/wiki/The_Italian_Job")))
 
 val vers = typelevel.versions ++ catalysts.versions
 val libs = typelevel.libraries ++ catalysts.libraries
 val addins = typelevel.scalacPlugins ++ catalysts.scalacPlugins
 val vAll = Versions(vers, libs, addins)
 
+// 2.13.0-M3 workaround
+val discipline_2_13 = "0.9.0-SNAPSHOT"
+val scalatest_2_13 = "3.0.5-M1"
+val specs2_2_13 = "4.0.3"
 /**
  * catalysts - This is the root project that aggregates the catalystsJVM and catalystsJS sub projects
  */
@@ -92,7 +96,9 @@ lazy val scalatestJS  = scalatestM.js
 lazy val scalatestM   = module("scalatest", CrossType.Pure)
   .dependsOn(testkitM % "compile; test -> test", lawkitM % "compile; test -> test")
   .settings(disciplineDependencies:_*)
-  .settings(addLibs(vAll, "scalatest"):_*)
+  // 2.13.0-M3 workaround
+  //.settings(addLibs(vAll, "scalatest"):_*)
+  .settings(addLib2_13(vAll, "scalatest", scalatest_2_13 ):_*)
   .settings(scalacOptions -= "-Xfatal-warnings")
 
 /**
@@ -104,7 +110,10 @@ lazy val specs2 = project
   .settings(rootSettings:_*)
   .settings(commonJvmSettings:_*)
   .settings(disciplineDependencies:_*)
-  .settings(addLibs(vAll, "specs2-core","specs2-scalacheck" ):_*)
+  // 2.13.0-M3 workaround
+  //.settings(addLibs(vAll, "specs2-core","specs2-scalacheck" ):_*)
+  .settings(addLib2_13(vAll, "specs2-core", specs2_2_13):_*)
+  .settings(addLib2_13(vAll, "specs2-scalacheck", specs2_2_13):_*)
 
 /**
  * Lawkit - cross project that add Law and Property checking ti TestKit
@@ -166,7 +175,9 @@ lazy val testsM   = module("tests", CrossType.Pure)
   .dependsOn(macrosM, platformM, testkitM, specliteM % "test-internal -> test", scalatestM % "test-internal -> test")
   .settings(disciplineDependencies:_*)
   .settings(noPublishSettings:_*)
-  .settings(addTestLibs(vAll, "scalatest" ):_*)
+  // 2.13.0-M3 workaround
+  //.settings(addTestLibs(vAll, "scalatest" ):_*)
+  .settings(addTestLib2_13(vAll, "scalatest", scalatest_2_13):_*)
   .settings(testFrameworks ++= Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")))
 
 /**
@@ -175,6 +186,7 @@ lazy val testsM   = module("tests", CrossType.Pure)
 lazy val docs = project
   .configure(mkDocConfig(gh, rootSettings, commonJvmSettings,
     platformJVM, macrosJVM, scalatestJVM, specs2, testkitJVM ))
+
 
 /**
  * Settings
@@ -193,9 +205,13 @@ lazy val commonJsSettings = Seq(
 
 lazy val commonJvmSettings = Seq()
 
-lazy val disciplineDependencies = Seq(addLibs(vAll, "discipline", "scalacheck" ):_*)
+// 2.13.0-M3 workaround
+//lazy val disciplineDependencies = Seq(addLibs(vAll, "discipline", "scalacheck" ):_*)
+lazy val disciplineDependencies = Seq(
+  addLibs(vAll, "scalacheck"):_*) ++ Seq(
+  addLib2_13(vAll, "discipline", discipline_2_13):_*)
 
-lazy val publishSettings = sharedPublishSettings(gh, devs) ++ credentialSettings ++ sharedReleaseProcess
+lazy val publishSettings = sharedPublishSettings(gh) ++ credentialSettings ++ sharedReleaseProcess
 
 lazy val scoverageSettings = sharedScoverageSettings(60) ++ Seq(
   coverageExcludedPackages := "catalysts\\.Platform",
@@ -273,3 +289,45 @@ lazy val fix2_12 = Seq(
       }
     }
   )
+
+lazy val fix2_13 = Seq(
+    scalacOptions -= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n >= 12 =>
+          "-Xfatal-warnings"
+        case _ =>
+          ""
+      }
+    }
+  )
+
+// Something like the following may be better off in sbt-catalysts, but I fear that a proper
+// implementation would need more work and thought. So leaving here for now.
+def addTestLib2_13(versions: Versions, lib: String, altVersion: String, jvmOnly: Boolean = false) =
+  addLib2_13(versions, lib: String, altVersion: String, false, Some("test"))
+
+def addLib2_13(versions: Versions, lib: String, altVersion: String, jvmOnly: Boolean = false,
+      maybeScope: Option[String] = None,
+      exclusions: List[ExclusionRule] = Nil) = Seq(
+
+  libraryDependencies += {
+    val v: String = {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 13)) => altVersion
+        case _ => versions.vers(versions.libs(lib)._1)
+      }
+    }
+    val mainModule =
+      if(jvmOnly)
+        versions.libs(lib)._2 %% versions.libs(lib)._3 % v
+      else
+        versions.libs(lib)._2 %%% versions.libs(lib)._3 % v
+
+    (maybeScope, exclusions) match {
+        case (Some(scope), Nil) => mainModule % scope
+        case (None, ex) => mainModule excludeAll (ex: _*)
+        case (Some(scope), ex) => mainModule % scope excludeAll (ex: _*)
+        case _ => mainModule
+      }
+  }
+)
