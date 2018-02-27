@@ -9,7 +9,7 @@ trait SpecBase[P,PS] {
 
   private[catalysts] var context: String = ""
 
-  def check(x: => Boolean) = x must_== true
+  def check(x: => Boolean): Boolean = x must_== true
 
   def fail(msg: String): Nothing = throw new AssertionError(msg)
 
@@ -30,29 +30,32 @@ trait SpecBase[P,PS] {
 
   implicit class AnyOps2[A](actual: => A) {
 
-    def must_===(expected: A)(implicit s: Show[A], e: Equal[A]): Unit = {
+    def must_===(expected: A)(implicit s: Show[A], e: Equal[A]): Boolean = {
       val act = actual
       def test = e.eqv(expected, act)
       def koMessage = "%s !== %s".format(s.show(act), s.show(expected))
 
       if (!test)
         fail(koMessage)
+      else true
     }
 
-    def must_==(expected: A): Unit = {
+    def must_==(expected: A): Boolean = {
       val act = actual
       def test = expected == act
       def koMessage = "Expected (%s) to equal (%s)".format(act, expected)
       if (!test)
         fail(koMessage)
+      else true
     }
 
-    def mustMatch(f: PartialFunction[A, Boolean]): Unit = {
+    def mustMatch(f: PartialFunction[A, Boolean]): Boolean = {
       val act = actual
       def test = f.isDefinedAt(act) && f(act)
       def koMessage = "%s does not satisfy partial function".format(act)
       if (!test)
         fail(koMessage)
+      else true
     }
 
     def and[B](b: => B): B = {
@@ -60,15 +63,16 @@ trait SpecBase[P,PS] {
       b
     }
 
-    def mustBe_<(x: Int)(implicit ev: A <:< Int) = {
+    def mustBe_<(x: Int)(implicit ev: A <:< Int): Boolean = {
       val act = actual
       def test = ev(act) < x
       def koMessage = "%s <! %s".format(actual, x)
       if (!test)
         fail(koMessage)
+      else true
     }
 
-    def mustThrowA[T <: Throwable](implicit man: ClassTag[T]): Unit = {
+    def mustThrowA[T <: Throwable](implicit man: ClassTag[T]): Boolean = {
       val erasedClass = man.runtimeClass
       val failed: Boolean  =
         try {
@@ -81,17 +85,19 @@ trait SpecBase[P,PS] {
             else false
         }
       if (failed) fail("no exception thrown, expected " + erasedClass)
+      else true
     }
   }
 
   implicit class AnyRefOps[A <: AnyRef](actual: => A) {
 
-    def mustBeTheSameAs(expected: A): Unit = {
+    def mustBeTheSameAs(expected: A): Boolean = {
       val act = actual
       def test = expected eq act
       def koMessage = "Expected (%s) to be the same as (%s)".format(act, expected)
       if (!test)
         fail(koMessage)
+      else true
     }
   }
 

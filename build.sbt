@@ -9,7 +9,9 @@ import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
 //addCommandAlias("buildJVM",    ";macrosJVM/test;platformJVM/test;testkitJVM/test;specliteJVM/test;scalatestJVM/test;checkliteJVM/test;specs2/test;testsJVM/test")
 //addCommandAlias("validateJVM", ";scalastyle;buildJVM")
 //addCommandAlias("validateJS",  ";macrosJS/test;platformJS/test;testkitJS/test;specliteJS/test;scalatestJS/test;testsJS/test")
-addCommandAlias("validateJVM", ";scalastyle;rootJVM/test")
+// temporary:
+//addCommandAlias("validateJVM", ";scalastyle;rootJVM/test")
+addCommandAlias("validateJVM", ";rootJVM/test")
 addCommandAlias("validateJS",  ";rootJS/test")
 addCommandAlias("validate",    ";validateJS;validateJVM")
 addCommandAlias("validateAll", s""";++${vers("scalac")};+clean;+validate;++${vers("scalac")};docs/makeSite""") 

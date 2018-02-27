@@ -10,29 +10,34 @@ import org.scalacheck.Prop.forAll
 import scala.reflect.ClassTag
 
 trait TestSpec extends CheckLite with BaseTestSpec with BaseLawSpec with TestKit {
- 
+
   def assertEqEqImpl[A](actual: => A, expected: => A): AssertResult = {
     actual must_== expected
-  } 
+    ()
+  }
 
   def assertMsgEqEqImpl[A](msg: String, actual: => A, expected: => A): AssertResult = {
      actual must_== expected
-  } 
+    ()
+  }
 
   def  assertEqEqEqImpl[A](actual: => A, expected: => A)
-      (implicit show: Show[A], equal: Equal[A]): AssertResult =
+      (implicit show: Show[A], equal: Equal[A]): AssertResult = {
     actual must_=== (expected)
+    ()
+  }
 
   def nest(s: String)(a: => Any): Unit = {
     s should a
   }
 
-  def block(s: String)(a: => Any): Unit = { 
+  def block(s: String)(a: => Any): Unit = {
     s.in(a)
   }
 
   def  assert_ThrowImpl[A, T <: Throwable](actual: => A)(implicit m: ClassTag[T]): ExceptionResult = {
     actual.mustThrowA[T]
+    ()
   }
 
   def forAllImpl1[T1, R] (fun: (T1) => R)(implicit

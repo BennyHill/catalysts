@@ -9,13 +9,13 @@ import org.typelevel.discipline.Laws
  * 
  * LawChecks adds some helper methods to `Discipline`'s extension of `FunSuiteLike`.
  *
- * @see [[https://github.com/non/algebra/issues/57 Original issue in Algebra]], 
+ * @see [[https://github.com/non/algebra/issues/57 Original issue in Algebra]],
  *      [[https://github.com/non/algebra/pull/65 Original implementation in Algebra]]
  */
 trait LawChecks { self: LawKit =>
 
   /**
-   * Check the `laws` using `name` as the base name for the tests. 
+   * Check the `laws` using `name` as the base name for the tests.
    */
   case class LawChecker[L <: Laws](name: String, laws: L) {
 
@@ -24,11 +24,11 @@ trait LawChecks { self: LawKit =>
 
   /**
    * Check the `laws` for some type `A`, using the full name of `A` as the base name for the tests.
-   * 
+   *
    * {{{
    * implicit def orderLaws[A: Eq: Arbitrary] = OrderLaws[A]
    * implicit def groupLaws[A: Eq: Arbitrary] = GroupLaws[A]
-   * 
+   *
    * laws[OrderLaws, String].check(_.order)
    * laws[GroupLaws, String].check(_.monoid)
    * }}}

@@ -37,11 +37,13 @@ abstract class CheckLite extends Properties("") with SpecBase[Prop, Properties]{
       property(name + ":" + name2) = prop
     }
 
-  def checkAll(props: Properties) = for ((name, prop) <- props.properties) yield  property(name) = prop
+  def checkAll(props: Properties) =
+    for ((name, prop) <- props.properties) yield  property(name) = prop
 
   implicit class PropertyOps2(props: Properties) {
 
-    def withProp(propName: String, prop: Prop) = new PropertyOpsWithProp(propName, prop, name, props)
+    def withProp(propName: String, prop: Prop) =
+      new PropertyOpsWithProp(propName, prop, name, props)
   }
 
   implicit class CheckLiteStringOps(s: String) extends SpecBaseStringOps(s){
