@@ -12,7 +12,6 @@ import catalysts.specbase.SpecBase
 import Prop.{Exception, Result}
 import Gen.Parameters
 
-//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) { //extends Prop{
   def apply(prms: Parameters): Result = {
     try ev(a).apply(prms) catch {
@@ -21,7 +20,6 @@ class InStringOps[A](a: => A)(implicit ev: (=> A) => Prop) { //extends Prop{
   }
 }
 
-//@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class PropertyOpsWithProp(propName: String, prop: Prop, name:String, props: Properties) extends Properties(props.name) {
   for {(name, p) <- props.properties} property(name) = p
   property(propName) = prop

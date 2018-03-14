@@ -21,7 +21,7 @@ addCommandAlias("gitSnapshots", ";set version in ThisBuild := git.gitDescribedVe
  * Project settings
  */
 val gh = GitHubSettings(org = "typelevel", proj = "catalysts", publishOrg = "org.typelevel", license = apache)
-val devs = Seq(Developer("Alistair Johnson", "BennyHill", "", new java.net.URL("https://en.wikipedia.org/wiki/The_Italian_Job")))
+val devs = Seq(Developer("Alistair Johnson", "BennyHill", "", new java.net.URL("https://bh.example")))
 
 val vers = typelevel.versions ++ catalysts.versions
 val libs = typelevel.libraries ++ catalysts.libraries
@@ -29,7 +29,6 @@ val addins = typelevel.scalacPlugins ++ catalysts.scalacPlugins
 val vAll = Versions(vers, libs, addins)
 
 // 2.13.0-M3 workaround
-val discipline_2_13 = "0.9.0-SNAPSHOT"
 val scalatest_2_13 = "3.0.5-M1"
 val specs2_2_13 = "4.0.3"
 /**
@@ -65,9 +64,7 @@ lazy val checkliteM   = module("checklite", CrossType.Pure)
   .settings(disciplineDependencies:_*)
   .settings(addLibs(vAll, "scalacheck"):_*)
   .settings(testFrameworks := Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")))
- // .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
   .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion) // % "provided",
- // .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)
 
 /**
  * Macros - cross project that defines macros
@@ -207,11 +204,7 @@ lazy val commonJsSettings = Seq(
 
 lazy val commonJvmSettings = Seq()
 
-// 2.13.0-M3 workaround
-//lazy val disciplineDependencies = Seq(addLibs(vAll, "discipline", "scalacheck" ):_*)
-lazy val disciplineDependencies = Seq(
-  addLibs(vAll, "scalacheck"):_*) ++ Seq(
-  addLib2_13(vAll, "discipline", discipline_2_13):_*)
+lazy val disciplineDependencies = Seq(addLibs(vAll, "discipline", "scalacheck" ):_*)
 
 lazy val publishSettings = sharedPublishSettings(gh) ++ credentialSettings ++ sharedReleaseProcess
 

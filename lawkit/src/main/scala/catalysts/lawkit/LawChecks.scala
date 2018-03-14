@@ -6,7 +6,7 @@ import org.typelevel.discipline.Laws
 
 /**
  * Trait that facilitates law checks
- * 
+ *
  * LawChecks adds some helper methods to `Discipline`'s extension of `FunSuiteLike`.
  *
  * @see [[https://github.com/non/algebra/issues/57 Original issue in Algebra]],
