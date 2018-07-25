@@ -28,8 +28,8 @@ val addins = typelevel.scalacPlugins ++ catalysts.scalacPlugins
 val vAll = Versions(vers, libs, addins)
 
 // 2.13.0-M3 workaround
-val scalatest_2_13 = "3.0.5-M1"
-val specs2_2_13 = "4.0.3"
+val scalatest_2_13 = "3.0.6-SNAP1"
+val specs2_2_13 = "4.3.0"
 /**
  * catalysts - This is the root project that aggregates the catalystsJVM and catalystsJS sub projects
  */
@@ -46,7 +46,7 @@ lazy val rootPrj = project
 lazy val rootJVM = project
   .configure(mkRootJvmConfig(gh.proj, rootSettings, commonJvmSettings))
   .aggregate(checkliteJVM, lawkitJVM, macrosJVM, platformJVM, scalatestJVM, specs2, specbaseJVM, specliteJVM, testkitJVM, testsJVM, docs)
-  .dependsOn(checkliteJVM, lawkitJVM, macrosJVM, platformJVM, scalatestJVM, specs2, specbaseJVM,specliteJVM, testkitJVM, testsJVM % "compile;test-internal -> test")
+  .dependsOn(checkliteJVM, lawkitJVM, macrosJVM, platformJVM, scalatestJVM, specs2, specbaseJVM, specliteJVM, testkitJVM, testsJVM % "compile;test-internal -> test")
 
 lazy val rootJS = project
   .configure(mkRootJsConfig(gh.proj, rootSettings, commonJsSettings))
@@ -82,7 +82,7 @@ lazy val macrosM   = module("macros", CrossType.Pure)
 lazy val platform    = prj(platformM)
 lazy val platformJVM = platformM.jvm
 lazy val platformJS  = platformM.js
-lazy val platformM   = module("platform", CrossType.Dummy)
+lazy val platformM   = module("platform", CrossType.Full)
   .dependsOn(macrosM)
 
 /**
@@ -145,6 +145,7 @@ lazy val testkitJS  = testkitM.js
 lazy val testkitM   = module("testkit", CrossType.Pure)
   .dependsOn(macrosM, platformM)
   .settings(typelevel.macroCompatSettings(vAll):_*)
+  .settings(macroAnnotationsSettings)
   .configureCross(disableScoverage210Js)
   .settings(fix2_12:_*)
 
@@ -189,10 +190,12 @@ lazy val docs = project
 /**
  * Settings
  */
+
+
 lazy val buildSettings = localSharedBuildSettings(gh, vAll)
 
 lazy val commonSettings = sharedCommonSettings ++ Seq(
-  scalacOptions ++= scalacAllOptions,
+  scalacOptions ++= scalacAllOptionsFor(scalaVersion.value),
   incOptions := incOptions.value.withLogRecompileOnMacro(false),
   parallelExecution in Test := false,
   developers := List(Developer("Alistair Johnson", "BennyHill", "", new java.net.URL("https://bh.example")))
@@ -221,12 +224,11 @@ lazy val scoverageSettings = sharedScoverageSettings(60) ++ Seq(
 
 def localSharedBuildSettings(gh: GitHubSettings, v: Versions) = Seq(
     organization := gh.publishOrg,
-    scalaVersion := v.vers("scalac"),
-    crossScalaVersions := Seq(v.vers("scalac_2.10"), v.vers("scalac_2.11") , v.vers("scalac_2.12") , v.vers("scalac_2.13"))
-  )
+    scalaVersion := v.vers("scalac_2.13"),
+    crossScalaVersions := Seq(v.vers("scalac_2.11") , v.vers("scalac_2.12") , v.vers("scalac_2.13"))
+  ) ++ crossVersionSharedSources
 
 val cmdlineProfile = sys.props.getOrElse("sbt.profile", default = "")
-
 
 def profile(crossProject: CrossProject) = cmdlineProfile match {
   case "2.12.x" =>

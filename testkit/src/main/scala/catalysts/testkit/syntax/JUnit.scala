@@ -10,7 +10,8 @@ import macrocompat.bundle
 import scala.annotation.StaticAnnotation
 
 import scala.annotation.compileTimeOnly
-@compileTimeOnly("enable macro paradise to expand macro annotations")
+
+@compileTimeOnly("enable macro paradise or add the -Ymacro-annotations flag to expand macro annotations")
 class Test extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro TestMacro.impl
 }

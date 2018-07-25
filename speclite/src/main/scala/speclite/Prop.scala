@@ -5,7 +5,7 @@ package speclite
 //@scala.scalajs.reflect.annotation.EnableReflectiveInstantiation
 class Properties(val name: String) extends Prop {
 
-  private val props = new scala.collection.mutable.ListBuffer[(String,Prop)]
+   private val props = new scala.collection.mutable.ListBuffer[(String,Prop)]
 
   /** Returns one property which holds if and only if all of the
     *  properties in this property collection hold */
@@ -13,7 +13,7 @@ class Properties(val name: String) extends Prop {
 
   /** Returns all properties of this collection in a list of name/property
     *  pairs.  */
-  def properties: Seq[(String,Prop)] = props
+  def properties: Seq[(String,Prop)] = props.toSeq
 
  def apply(p: Gen.Parameters) = oneProperty(p)
 
