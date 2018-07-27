@@ -218,7 +218,13 @@ lazy val scoverageSettings = sharedScoverageSettings(60) ++ Seq(
  /** Common coverage settings, with minimum coverage defaulting to 80.*/
   def sharedScoverageSettings(min: Int = 80) = Seq(
     coverageMinimum := min,
-    coverageFailOnMinimum := false
+    coverageFailOnMinimum := false,
+    coverageEnabled := {
+      if(priorTo2_13(scalaVersion.value))
+        coverageEnabled.value
+      else
+        false
+    }
    //   ,coverageHighlighting := scalaBinaryVersion.value != "2.10"
   )
 
