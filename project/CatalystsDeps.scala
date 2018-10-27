@@ -13,7 +13,7 @@ object Dependencies {
    // "macro-compat"   -> "1.0.44"
   // "discipline"     -> "0.8",
   "scalacheck"     -> "1.14.0",
-   "scalatest"      -> "3.0.6-SNAP1",
+   "scalatest"      -> "3.0.6-SNAP4",
    "specs2"         -> "4.3.0"
   )
 
