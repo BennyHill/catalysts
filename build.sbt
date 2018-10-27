@@ -1,6 +1,7 @@
+import sbtcrossproject.CrossProject
 import org.typelevel.{Dependencies => typelevel}
 import org.typelevel.catalysts.{Dependencies => catalysts}
-import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
+import sbtcrossproject.CrossPlugin.autoImport.CrossType
 
 /**
  * These aliases serialise the build for the benefit of Travis-CI, also useful for pre-PR testing.
