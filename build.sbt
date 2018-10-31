@@ -29,8 +29,8 @@ val addins = typelevel.scalacPlugins ++ catalysts.scalacPlugins
 val vAll = Versions(vers, libs, addins)
 
 // 2.13.0-M3 workaround
-val scalatest_2_13 = "3.0.6-SNAP1"
-val specs2_2_13 = "4.3.0"
+val scalatest_2_13 = "3.0.6-SNAP4"
+val specs2_2_13 = "4.3.5"
 /**
  * catalysts - This is the root project that aggregates the catalystsJVM and catalystsJS sub projects
  */
@@ -158,7 +158,10 @@ lazy val specliteJVM = specliteM.jvm
 lazy val specliteJS  = specliteM.js
 lazy val specliteM   =  module("speclite", CrossType.Pure)
   .dependsOn(platformM, testkitM % "compile; test -> test", specbaseM % "compile; test -> test")
-  .settings(testFrameworks := Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")))
+  .settings(
+    testFrameworks := Seq(new TestFramework("catalysts.speclite.SpecLiteFramework")),
+    scalacOptions -= "-Xfatal-warnings" //temp solution for some deprecations warnings
+  )
   .jvmSettings(libraryDependencies += "org.scala-sbt" %  "test-interface" % "1.0")
   .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion)
   .jsSettings( libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion)

@@ -3,7 +3,7 @@
 package catalysts
 package speclite
 
-import scala.language.{implicitConversions, reflectiveCalls}
+import scala.language.{reflectiveCalls}
 import Prop.Arg
 
 sealed trait Pretty extends Serializable {
