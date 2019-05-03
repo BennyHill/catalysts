@@ -28,11 +28,11 @@ trait WSpecMatchers { self: TestKit =>
   }
 }
 
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 import macrocompat.bundle
 
 @bundle
-class WSpecMatchersMacros(val c: whitebox.Context)  {
+class WSpecMatchersMacros(val c: blackbox.Context)  {
   import c.universe._
 
   def unpack  = {

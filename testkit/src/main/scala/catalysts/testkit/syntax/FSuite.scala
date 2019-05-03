@@ -40,11 +40,11 @@ trait FSuiteMatchers { self : TestKit =>
     macro FSuiteMatchersMacros.assertTypedSame[A]
 }
 
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 import macrocompat.bundle
 
 @bundle
-class FSuiteMatchersMacros(val c: whitebox.Context)  {
+class FSuiteMatchersMacros(val c: blackbox.Context)  {
   import c.universe._
 
   def assertEq[A](actual: Tree, expected: Tree): Tree =

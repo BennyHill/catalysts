@@ -5,7 +5,7 @@ import catalysts.testkit.TestKit
 import org.scalacheck.{Shrink, Arbitrary}
 
 import scala.language.experimental.macros
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 import macrocompat.bundle
 
 trait LawSpec { self: LawKit with TestKit =>
@@ -63,7 +63,7 @@ trait LawSpec { self: LawKit with TestKit =>
 }
 
 @bundle
-class LawSpecMacros(val c: whitebox.Context) {
+class LawSpecMacros(val c: blackbox.Context) {
 
   import c.universe._
 

@@ -2,7 +2,7 @@ package catalysts
 package macros
 
 import scala.language.experimental.macros
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 
 import macrocompat.bundle
 
@@ -14,7 +14,7 @@ object ClassInfo {
  * Do not use this directly, rather [[catalysts.macros.ClassInfo]]
  */
 @bundle
-class ClassInfoMacros(val c: whitebox.Context) {
+class ClassInfoMacros(val c: blackbox.Context) {
   import c.universe._
 
   def classNameImpl(that: c.Expr[Any]): c.Expr[String] =

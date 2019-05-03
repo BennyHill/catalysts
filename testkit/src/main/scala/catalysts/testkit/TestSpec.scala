@@ -3,7 +3,7 @@ package testkit
 
 import scala.reflect.ClassTag
 import scala.language.experimental.macros
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 import macrocompat.bundle
 
 trait TestSpec { self: TestKit =>
@@ -35,7 +35,7 @@ trait TestSpec { self: TestKit =>
 }
 
 @bundle
-class TestSpecMacros(val c: whitebox.Context)  {
+class TestSpecMacros(val c: blackbox.Context)  {
   import c.universe._
 
   def assertEqEq[A](actual: Tree, expected: Tree): Tree =

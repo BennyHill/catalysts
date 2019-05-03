@@ -4,7 +4,7 @@ package syntax
 package junit
 
 import scala.language.experimental.macros
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 import macrocompat.bundle
 
 import scala.annotation.StaticAnnotation
@@ -17,7 +17,7 @@ class Test extends StaticAnnotation {
 }
 
 @bundle
-class TestMacro(val c: whitebox.Context) {
+class TestMacro(val c: blackbox.Context) {
 
   import c.universe._
 

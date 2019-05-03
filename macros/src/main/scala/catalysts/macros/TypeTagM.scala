@@ -2,7 +2,7 @@ package catalysts
 package macros
 
 import scala.language.experimental.macros
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 import macrocompat.bundle
 
 /**
@@ -19,7 +19,7 @@ object TypeTagM {
 }
 
 @bundle
-class TypeTagMacros(val c: whitebox.Context) {
+class TypeTagMacros(val c: blackbox.Context) {
   import c.universe._
 
   def applyImpl[T](implicit tTag: WeakTypeTag[T]): c.Expr[TypeTagM[T]] = {
